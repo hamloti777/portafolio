@@ -550,11 +550,13 @@ nav {
   .project-img-wrap.tapped .project-img-front { opacity: 0; }
   .project-img-wrap.tapped .project-img-back { opacity: 1; }
 
-  /* Collab seal: top-right next to title/pill */
-  .project-info { position: relative; }
+  /* Hide desktop collab seal on mobile */
+  .project-info > img[alt="Proyecto colaborativo"] { display: none !important; }
+
+  /* Collab seal mobile styles */
   .collab-mobile {
     position: absolute;
-    top: -70px;
+    top: 5px;
     right: 0;
     width: 65px;
     transform: rotate(12deg);
@@ -781,7 +783,7 @@ footer {
 <section class="project-section">
   <div style="position:relative;">
     <span class="project-tag">Identidad de marca</span>
-    <img src="images/collab_seal.png" alt="Proyecto colaborativo" class="collab-mobile" style="display:none;position:absolute;top:-10px;right:0;width:65px;transform:rotate(12deg);pointer-events:none;z-index:2;">
+    <img src="images/collab_seal.png" alt="Proyecto colaborativo" class="collab-mobile" style="display:none;position:absolute;top:5px;right:0;width:65px;transform:rotate(12deg);pointer-events:none;z-index:2;">
   </div>
   <h2 class="project-title">Signum</h2>
   <div class="project-body">
@@ -838,7 +840,7 @@ footer {
   <h2 class="project-title">Los Flakos</h2>
   <div class="project-body">
     <div class="project-img-wrap no-hover" style="cursor:default;border-radius:1rem;overflow:hidden;border:2px solid var(--dark);aspect-ratio:1/1;">
-      <img src="images/flakos-logo.png" alt="Los Flakos" style="width:100%;height:100%;object-fit:cover;display:block;">
+      <img src="images/flakos-logo.jpg" alt="Los Flakos" style="width:100%;height:100%;object-fit:cover;display:block;">
     </div>
     <div class="project-info">
       <div class="project-info-block"><h3>Contexto</h3><p>Una banda mexicana con 2 álbumes y miles escuchas mensuales en plataformas musicales.</p></div>
@@ -938,21 +940,26 @@ footer {
     // Show mobile collab seal
     const mobileSeals = document.querySelectorAll('.collab-mobile');
     mobileSeals.forEach(s => s.style.display = 'block');
-    // Simple tap to flip cards (not long press)
+
+    // Simple tap to flip cards — toggles back on second tap
     const cards = document.querySelectorAll('.card');
+    let autoFlipActive = true;
     cards.forEach(card => {
       card.addEventListener('touchend', e => {
         e.preventDefault();
+        autoFlipActive = false; // stop auto on user interaction
         card.classList.toggle('flipped');
       });
     });
 
-    // Sequential auto-flip cards
+    // Sequential auto-flip until user taps
     let current = 0;
     function autoFlip() {
+      if (!autoFlipActive) return;
       const card = cards[current];
       card.classList.add('flipped');
       setTimeout(() => {
+        if (!autoFlipActive) return;
         card.classList.remove('flipped');
         setTimeout(() => {
           current = (current + 1) % cards.length;
@@ -962,7 +969,7 @@ footer {
     }
     setTimeout(autoFlip, 1500);
 
-    // Simple tap to toggle crossfade on project images
+    // Tap toggles project image — second tap returns to front
     document.querySelectorAll('.project-img-wrap:not(.no-hover)').forEach(wrap => {
       wrap.addEventListener('touchend', e => {
         e.preventDefault();
@@ -995,9 +1002,9 @@ footer {
   // Carrusel Placas Finas — imágenes reales
   const placasImgs = [
     'images/placas-brandbook.jpg',
-    'images/placas-papeleria.png',
+    'images/placas-papeleria.jpg',
     'images/placas-web.jpg',
-    'images/placas-antes-despues.png',
+    'images/placas-antes-despues.jpg',
     'images/placas-cotizacion-1.jpg',
     'images/placas-cotizacion-2.jpg',
     'images/placas-membrete.jpg',
@@ -1065,10 +1072,10 @@ footer {
   // Carrusel Los Flakos — imágenes reales
   const flakosImgs = [
     'images/flakos-tee-beige.jpg',
-    'images/flakos-avion-logo.png',
+    'images/flakos-avion-logo.jpg',
     'images/flakos-tijuana-1.jpg',
     'images/flakos-stickers.jpg',
-    'images/flakos-flyer.png',
+    'images/flakos-flyer.jpg',
     'images/flakos-tee-gris.jpg',
     'images/flakos-propuesta-3.jpg',
     'images/flakos-tijuana-2.jpg',
